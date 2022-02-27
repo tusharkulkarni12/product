@@ -2,7 +2,6 @@ package com.programming.techie.productservice.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,32 +11,33 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.programming.techie.productservice.model.Product;
-import com.programming.techie.productservice.repository.ProductRepository;
+import com.programming.techie.service.ProductService;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/api/product")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ProductController {
 
-	 private ProductRepository productRepository;
+	private final ProductService productService;
 
-	    @Autowired
-	    public void setPersonRepository(ProductRepository pr) {
-	        this.productRepository = pr;
-	    }
+	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
+	public List<Product> fetchAllProducts() {
+		return productService.getAllProducts();
+	}
 
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public void createProduct(@RequestBody Product product) {
+		productService.insertProduct(product);
+	}
+//    
+//    @DeleteMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    public void deleteProduct(@PathVariable String id) {
+//        productRepository.deleteById(id);
+//    }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<Product> findAll() {
-        return productRepository.findAll();
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody Product product) {
-        productRepository.save(product);
-    }
 }
